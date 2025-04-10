@@ -1,0 +1,50 @@
+body {
+  background-color: black;
+  color: white;
+  font-family: sans-serif;
+}
+
+.garage-header,
+.garage-controls,
+.garage-buttons,
+.form-inline {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+input[type="text"] {
+  width: 120px;
+  padding: 4px;
+}
+
+.garage-title,
+.garage-page {
+  margin: 10px 0;
+}
+
+.garage-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.car-row {
+  border-bottom: 2px dashed white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.car-name {
+  font-weight: bold;
+  color: gold;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}

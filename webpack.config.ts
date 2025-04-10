@@ -11,6 +11,10 @@ const config: Configuration = {
   module: {
     rules: [
       {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
         test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/,
@@ -21,7 +25,7 @@ const config: Configuration = {
     extensions: ['.ts', '.js'],
   },
   devServer: {
-    static: './dist',
+    static: './public',
     port: 8080,
     open: true,
   },
