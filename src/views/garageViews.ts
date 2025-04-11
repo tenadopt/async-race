@@ -1,23 +1,25 @@
 export const renderGarage = (): string => `
-  <div class="garage-header">
-    <button id="garage-btn">TO GARAGE</button>
-    <button id="winners-btn">TO WINNERS</button>
-  </div>
+  <div class="top-panel">
+    <div class="nav-buttons">
+      <button id="garage-btn">TO GARAGE</button>
+      <button id="winners-btn">TO WINNERS</button>
+    </div>
 
-  <div class="garage-controls">
-    <form id="create-form" class="form-inline">
-      <input type="text" id="create-name" placeholder="Car name" required />
-      <input type="color" id="create-color" value="#ffffff" />
-      <button type="submit">CREATE</button>
-    </form>
+    <div class="form-row">
+      <form id="create-form" class="form-inline">
+        <input type="text" id="create-name" placeholder="Car name" required />
+        <input type="color" id="create-color" value="#ffffff" />
+        <button type="submit">CREATE</button>
+      </form>
 
-    <form id="update-form" class="form-inline">
-      <input type="text" id="update-name" placeholder="New name" />
-      <input type="color" id="update-color" value="#000000" />
-      <button type="submit">UPDATE</button>
-    </form>
+      <form id="update-form" class="form-inline">
+        <input type="text" id="update-name" placeholder="New name" />
+        <input type="color" id="update-color" value="#000000" />
+        <button type="submit">UPDATE</button>
+      </form>
+    </div>
 
-    <div class="garage-buttons">
+    <div class="action-buttons">
       <button id="race">RACE</button>
       <button id="reset">RESET</button>
       <button id="generate-cars">GENERATE CARS</button>

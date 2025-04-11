@@ -7,20 +7,28 @@ const renderView = async (view: string): Promise<void> => {
   if (view === 'garage') {
     await initGarage();
   } else {
-    app!.innerHTML = '<h1>Winners Page</h1>';
+    app!.innerHTML = `
+      <div class="top-panel">
+        <div class="nav-buttons">
+          <button id="garage-btn">TO GARAGE</button>
+          <button id="winners-btn">TO WINNERS</button>
+        </div>
+        <h1 style="margin-top: 30px;">Winners Page</h1>
+      </div>
+    `;
   }
+
+  document.getElementById('garage-btn')?.addEventListener('click', () => renderView('garage'));
+  document.getElementById('winners-btn')?.addEventListener('click', () => renderView('winners'));
 
   window.history.pushState({ view }, '', `#${view}`);
 };
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('garage-btn')?.addEventListener('click', () => renderView('garage'));
-  document.getElementById('winners-btn')?.addEventListener('click', () => renderView('winners'));
-});
 
 window.onpopstate = () => {
   const view = window.location.hash.replace('#', '') || 'garage';
   renderView(view);
 };
 
-renderView('garage');
+document.addEventListener('DOMContentLoaded', () => {
+  renderView('garage');
+});
