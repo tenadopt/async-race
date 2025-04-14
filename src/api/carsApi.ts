@@ -52,19 +52,12 @@ export interface Winner {
     time: number;
 }
 
-interface GetWinnersParams {
-    page?: number;
-    limit?: number;
-    sort?: string;
-    order?: 'ASC' | 'DESC';
-}
-
-export const getWinners = async ({
+export const getWinners = async (
+  sort?: string,
+  order?: 'ASC' | 'DESC',
   page = 1,
   limit = 10,
-  sort,
-  order,
-}: GetWinnersParams = {}): Promise<{ winners: Winner[]; total: number }> => {
+) => {
   const url = new URL(`${BASE_URL}/winners`);
   url.searchParams.set('_page', page.toString());
   url.searchParams.set('_limit', limit.toString());
@@ -79,6 +72,7 @@ export const getWinners = async ({
 
 export const getWinner = async (id: number): Promise<Winner> => {
   const response = await fetch(`${BASE_URL}/winners/${id}`);
+  if (!response.ok) throw new Error('Winner not found');
   return response.json();
 };
 

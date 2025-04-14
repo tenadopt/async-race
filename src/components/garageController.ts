@@ -4,11 +4,12 @@ import {
   deleteCar,
   updateCar,
   getCar,
+  createWinner, getWinner, updateWinner,
 } from '../api/carsApi';
 import { renderGarage } from '../views/garageViews';
 import { generateRandomCars } from '../utils/random';
 import { driveCar, startEngine, stopEngine } from '../api/engineApi';
-import { animateCar } from '../utils/animation';
+import { initWinners } from './winnersController';
 
 let currentPage = 1;
 const limit = 7;
@@ -121,6 +122,38 @@ const updateCarList = async () => {
   });
 };
 
+let currentPopup: HTMLDivElement | null = null;
+
+export const showPopup = (text: string): void => {
+  if (currentPopup) return;
+
+  const popup = document.createElement('div');
+  popup.textContent = text;
+  popup.className = 'race-popup';
+
+  popup.style.position = 'fixed';
+  popup.style.top = '50%';
+  popup.style.left = '50%';
+  popup.style.transform = 'translate(-50%, -50%)';
+  popup.style.fontSize = '28px';
+  popup.style.color = '#fff';
+  popup.style.background = 'rgba(255, 165, 0, 0.9)';
+  popup.style.padding = '20px 40px';
+  popup.style.borderRadius = '10px';
+  popup.style.boxShadow = '0 0 20px orange';
+  popup.style.zIndex = '9999';
+
+  document.body.appendChild(popup);
+  currentPopup = popup;
+};
+
+export const removePopup = (): void => {
+  if (currentPopup) {
+    currentPopup.remove();
+    currentPopup = null;
+  }
+};
+
 export const initGarage = async () => {
   const app = document.getElementById('app');
   if (!app) return;
@@ -160,6 +193,26 @@ export const initGarage = async () => {
     updateCarList();
   });
 
+  document.getElementById('reset')?.addEventListener('click', async () => {
+    const carRows = Array.from(document.querySelectorAll('.car-row'));
+
+    await Promise.all(
+      carRows.map(async (row) => {
+        const id = Number(row.getAttribute('data-id'));
+        const carIcon = row.querySelector('.car-icon') as HTMLElement;
+        try {
+          await stopEngine(id);
+          carIcon.style.transition = 'none';
+          carIcon.style.transform = 'translateX(0)';
+        } catch (error) {
+          console.error(`Error reset ${id}:`, error);
+        }
+      }),
+    );
+
+    removePopup();
+  });
+
   document.getElementById('prev-page')?.addEventListener('click', () => {
     if (currentPage > 1) {
       currentPage -= 1;
@@ -170,5 +223,56 @@ export const initGarage = async () => {
   document.getElementById('next-page')?.addEventListener('click', () => {
     currentPage += 1;
     updateCarList();
+  });
+
+  let winnerAnnounced = false;
+
+  document.getElementById('race')?.addEventListener('click', async () => {
+    const carRows = Array.from(document.querySelectorAll('.car-row'));
+
+    const racePromises = carRows.map(async (row) => {
+      const id = Number(row.getAttribute('data-id'));
+      const carIcon = row.querySelector('.car-icon') as HTMLElement;
+      const track = row.querySelector('.car-track') as HTMLElement;
+      const startBtn = row.querySelector('.start-btn') as HTMLButtonElement;
+      const name = row.querySelector('.car-name')?.textContent || 'Unknown';
+
+      startBtn.disabled = true;
+
+      try {
+        const { velocity } = await startEngine(id);
+        const distance = track.offsetWidth - carIcon.offsetWidth;
+        const time = distance / velocity;
+
+        carIcon.style.transition = `transform ${time}s linear`;
+        carIcon.style.transform = `translateX(${distance}px)`;
+
+        await new Promise((resolve) => { setTimeout(resolve, time * 1000); });
+
+        if (!winnerAnnounced) {
+          winnerAnnounced = true;
+          showPopup(`${name} won (${time.toFixed(2)}s)!`);
+
+          try {
+            const existing = await getWinner(id);
+            await updateWinner(id, {
+              id,
+              wins: existing.wins + 1,
+              time: Math.min(existing.time, time),
+            });
+          } catch {
+            await createWinner({ id, wins: 1, time });
+          }
+        }
+      } catch {
+        console.error('Ignored when car is broken');
+      }
+    });
+
+    await Promise.all(racePromises);
+
+    if (window.location.hash === '#winners') {
+      await initWinners();
+    }
   });
 };
