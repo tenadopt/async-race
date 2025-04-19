@@ -4,12 +4,12 @@ import {
   deleteCar,
   updateCar,
   getCar,
-  createWinner, getWinner, updateWinner,
 } from '../api/carsApi';
 import { renderGarage } from '../views/garageViews';
 import { generateRandomCars } from '../utils/random';
 import { driveCar, startEngine, stopEngine } from '../api/engineApi';
-import { initWinners } from './winnersController';
+import { createWinner, getWinner, updateWinner } from '../api/winnersApi';
+import { initializeWinnersPage } from './winners/initWinnersView';
 
 let currentPage = 1;
 const limit = 7;
@@ -272,7 +272,7 @@ export const initGarage = async () => {
     await Promise.all(racePromises);
 
     if (window.location.hash === '#winners') {
-      await initWinners();
+      await initializeWinnersPage();
     }
   });
 };

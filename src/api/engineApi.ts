@@ -1,9 +1,4 @@
-const BASE_URL = 'http://localhost:3000';
-
-export interface EngineResponse {
-    velocity: number;
-    distance: number;
-}
+import { BASE_URL, EngineResponse } from '../types/types';
 
 export const startEngine = async (id: number): Promise<EngineResponse> => {
   const response = await fetch(`${BASE_URL}/engine?id=${id}&status=started`, {
