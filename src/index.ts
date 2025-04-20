@@ -1,6 +1,7 @@
-import { initGarage, removePopup } from './components/garageController';
 import './styles/garage.css';
 import { initializeWinnersPage } from './components/winners/initWinnersView';
+import { removePopup } from './components/garage/popupHandler';
+import { initGarage } from './components/garage/initGarage';
 
 const app = document.getElementById('app');
 
