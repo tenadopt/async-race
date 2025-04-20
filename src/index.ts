@@ -1,5 +1,5 @@
 import './styles/garage.css';
-import { initializeWinnersPage } from './components/winners/initWinnersView';
+import { initializeWinnersPage } from './components/winners/initializeWinnersPage';
 import { removePopup } from './components/garage/popupHandler';
 import { initGarage } from './components/garage/initGarage';
 

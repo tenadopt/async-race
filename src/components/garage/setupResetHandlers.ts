@@ -1,5 +1,6 @@
 import { stopEngine } from '../../api/engineApi';
 import { removePopup } from './popupHandler';
+import { setWinnerAnnounced } from '../../store/winnerState';
 
 const resetCar = async (row: Element) => {
   const id = Number(row.getAttribute('data-id'));
@@ -14,5 +15,6 @@ export const setupResetHandlers = () => {
     const carRows = Array.from(document.querySelectorAll('.car-row'));
     await Promise.all(carRows.map(resetCar));
     removePopup();
+    setWinnerAnnounced(false);
   });
 };

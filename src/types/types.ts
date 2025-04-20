@@ -15,11 +15,11 @@ export interface Winner {
     time: number;
 }
 
-export interface GetWinnersParams {
-    sort?: string;
-    order?: 'ASC' | 'DESC';
-    page?: number;
-    limit?: number;
+export interface LoadParams {
+    page: number;
+    limit: number;
+    sort?: 'wins' | 'time';
+    order: 'ASC' | 'DESC';
 }
 
 export interface EngineResponse {
