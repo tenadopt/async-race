@@ -1,6 +1,7 @@
 import path from 'path';
 import { Configuration } from 'webpack';
 import 'webpack-dev-server';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const config: Configuration = {
   entry: './src/index.ts',
@@ -8,6 +9,11 @@ const config: Configuration = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'public/index.html',
+    }),
+  ],
   module: {
     rules: [
       {
